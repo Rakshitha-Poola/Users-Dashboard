@@ -68,7 +68,6 @@ export default function Home() {
 
         {!loading && !error && (
           <>
-            {/* ================= DESKTOP TABLE (UNCHANGED) ================= */}
             <div className="hidden md:block overflow-x-auto rounded-xl border border-slate-200">
               <table className="w-full min-w-[720px] text-sm">
                 <thead className="bg-gradient-to-r from-slate-800 to-slate-700 text-white">

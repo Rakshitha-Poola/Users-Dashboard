@@ -44,7 +44,7 @@ export default function UserDetails() {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
 
-      {/* BACK */}
+      
       <button
         onClick={() => navigate(-1)}
         className="mb-4 flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
@@ -55,7 +55,7 @@ export default function UserDetails() {
 
       <div className="mx-auto max-w-4xl rounded-2xl bg-white p-8 shadow-xl">
 
-        {/* HEADER */}
+      
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-gray-800">
             User Details
@@ -65,10 +65,10 @@ export default function UserDetails() {
           </p>
         </div>
 
-        {/* CONTENT */}
+        
         <div className="space-y-8">
 
-          {/* PERSONAL INFO */}
+          
           <Section title="Personal Information">
             <Info icon={User} label="Full Name" value={user.name} />
             <Info icon={Mail} label="Email Address" value={user.email} />
