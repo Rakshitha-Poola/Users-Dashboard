@@ -60,8 +60,8 @@ export default function UserModal({ open, onClose, mode, user, refreshUsers }) {
 
       const url =
         mode === "create"
-          ? "http://localhost:4000/api/user/addUser"
-          : `http://localhost:4000/api/user/userUpdate/${user._id}`;
+          ? `${import.meta.env.VITE_API_URL}/addUser`
+          : `${import.meta.env.VITE_API_URL}/userUpdate/${user._id}`;
 
       await fetch(url, {
         method: mode === "create" ? "POST" : "PATCH",

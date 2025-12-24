@@ -20,7 +20,7 @@ export default function Home() {
       setLoading(true);
       setError("");
 
-      const res = await fetch("http://localhost:4000/api/user/allUsers");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/allUsers`);
       const data = await res.json();
 
       setUsers(data);
@@ -40,7 +40,7 @@ export default function Home() {
   const deleteUser = async (id) => {
     if (!confirm("Delete this user?")) return;
 
-    await fetch(`http://localhost:4000/api/user/deleteUser/${id}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/deleteUser/${id}`, {
       method: "DELETE",
     });
 

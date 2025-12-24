@@ -13,7 +13,7 @@ export default function UserDetails() {
     const fetchUser = async () => {
       try {
         const res = await fetch(
-          `http://localhost:4000/api/user/userDetails/${id}`
+          `${import.meta.env.VITE_API_URL}/userDetails/${id}`
         );
         const data = await res.json();
         setUser(data);
