@@ -11,22 +11,17 @@ export default function Home() {
   const [error, setError] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [mode, setMode] = useState("create"); // create | edit
+  const [mode, setMode] = useState("create");
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // ---------------- FETCH USERS ----------------
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      setError("");
-
       const res = await fetch(`${import.meta.env.VITE_API_URL}/allUsers`);
       const data = await res.json();
-
       setUsers(data);
     } catch (err) {
-      setError("Something went wrong");
-      console.log(err);
+      setError("Failed to load users");
     } finally {
       setLoading(false);
     }
@@ -36,7 +31,6 @@ export default function Home() {
     fetchUsers();
   }, []);
 
-  // ---------------- DELETE USER ----------------
   const deleteUser = async (id) => {
     if (!confirm("Delete this user?")) return;
 
@@ -48,12 +42,14 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#ede8e8] p-4 sm:p-6">
-      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow p-4 sm:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 p-6">
+      <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-6">
 
         {/* HEADER */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold">User Management</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <h1 className="text-2xl font-bold text-slate-800">
+            User Management
+          </h1>
 
           <button
             onClick={() => {
@@ -61,28 +57,26 @@ export default function Home() {
               setSelectedUser(null);
               setIsModalOpen(true);
             }}
-            className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg w-full sm:w-auto"
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:opacity-90"
           >
             <Plus size={18} /> Add User
           </button>
         </div>
 
-        {/* LOADING / ERROR */}
-        {loading && <p>Loading users...</p>}
+        {loading && <p className="text-gray-500">Loading users...</p>}
         {error && <p className="text-red-500">{error}</p>}
 
-        {/* ================= DESKTOP TABLE ================= */}
         {!loading && !error && (
-          <div className="hidden sm:block">
-            <table className="w-full text-sm border-collapse">
-              <thead className="bg-gray-50 text-left">
+          <div className="overflow-x-auto rounded-xl border border-slate-200">
+            <table className="w-full min-w-[720px] text-sm">
+              <thead className="bg-gradient-to-r from-slate-800 to-slate-700 text-white">
                 <tr>
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Email</th>
-                  <th className="p-3">Phone</th>
-                  <th className="p-3">Company</th>
-                  <th className="p-3">City</th>
-                  <th className="p-3 text-center">Actions</th>
+                  <th className="p-4 text-left">User</th>
+                  <th className="p-4 text-left">Email</th>
+                  <th className="p-4 text-left">Phone</th>
+                  <th className="p-4 text-left">Company</th>
+                  <th className="p-4 text-left">City</th>
+                  <th className="p-4 text-center">Actions</th>
                 </tr>
               </thead>
 
@@ -90,33 +84,50 @@ export default function Home() {
                 {users.map((user) => (
                   <tr
                     key={user._id}
-                    className="border-t hover:bg-gray-50 cursor-pointer"
+                    className="border-b hover:bg-slate-50 cursor-pointer transition"
                     onClick={() => navigate(`/users/${user._id}`)}
                   >
-                    <td className="p-3">{user.name}</td>
-                    <td className="p-3">{user.email}</td>
-                    <td className="p-3">{user.phone}</td>
-                    <td className="p-3">{user.company}</td>
-                    <td className="p-3">{user.address?.[0]?.city}</td>
+                    {/* USER COLUMN */}
+                    <td className="p-4 flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold">
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
+                      <span className="font-medium text-slate-800">
+                        {user.name}
+                      </span>
+                    </td>
 
-                    <td className="p-3">
-                      <div className="flex justify-center gap-4">
-                        <Pencil
-                          className="text-blue-500 cursor-pointer"
+                    <td className="p-4 text-slate-600">{user.email}</td>
+                    <td className="p-4 text-slate-600">{user.phone}</td>
+                    <td className="p-4 text-slate-600">{user.company}</td>
+                    <td className="p-4 text-slate-600">
+                      {user.address?.[0]?.city || "-"}
+                    </td>
+
+                    {/* ACTIONS */}
+                    <td className="p-4">
+                      <div className="flex justify-center gap-2">
+                        <button
+                          className="p-2 rounded-lg bg-blue-50 hover:bg-blue-100"
                           onClick={(e) => {
                             e.stopPropagation();
                             setMode("edit");
                             setSelectedUser(user);
                             setIsModalOpen(true);
                           }}
-                        />
-                        <Trash2
-                          className="text-red-400 cursor-pointer"
+                        >
+                          <Pencil size={16} className="text-blue-600" />
+                        </button>
+
+                        <button
+                          className="p-2 rounded-lg bg-red-50 hover:bg-red-100"
                           onClick={(e) => {
                             e.stopPropagation();
                             deleteUser(user._id);
                           }}
-                        />
+                        >
+                          <Trash2 size={16} className="text-red-600" />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -126,54 +137,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* ================= MOBILE CARDS ================= */}
-        <div className="space-y-4 sm:hidden">
-          {users.map((user) => (
-            <div
-              key={user._id}
-              onClick={() => navigate(`/users/${user._id}`)}
-              className="rounded-xl border bg-white p-4 shadow-sm"
-            >
-              <div className="flex justify-between gap-4">
-
-                {/* LEFT: USER DETAILS */}
-                <div>
-                  <h3 className="font-semibold text-gray-800">
-                    {user.name}
-                  </h3>
-                  <p className="text-sm text-gray-500">{user.email}</p>
-                  <p className="text-sm text-gray-500">{user.phone}</p>
-                  <p className="text-sm text-gray-500">
-                    {user.address?.[0]?.city}
-                  </p>
-                </div>
-
-                {/* RIGHT: ACTION ICONS */}
-                <div className="flex flex-col items-center justify-center gap-4">
-                  <Pencil
-                    className="text-blue-500 cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setMode("edit");
-                      setSelectedUser(user);
-                      setIsModalOpen(true);
-                    }}
-                  />
-
-                  <Trash2
-                    className="text-red-400 cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteUser(user._id);
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* MODAL */}
         <UserModal
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
